@@ -58,7 +58,187 @@ Where:
 * $N_i(x)$ takes the value of 1 at node $i$ (at $x=x_i$).
 * $N_i(x)$ is 0 at nodes $i−1$ and $i+1$.
 * $N_i(x)$ is linear between the nodes, i.e., it rises from 0 to 1 between $x_{i-1}$ and $x_i$, and then falls from 1 to 0 between $x_i$ and $x_{i+1}$.
+To form the mass matrix, we integrate over the domain using the basis functions:
 
+𝑀
+𝑖
+𝑗
+=
+∫
+Ω
+𝑁
+𝑖
+(
+𝑥
+)
+𝑁
+𝑗
+(
+𝑥
+)
+ 
+𝑑
+𝑥
+M 
+ij
+​
+ =∫ 
+Ω
+​
+ N 
+i
+​
+ (x)N 
+j
+​
+ (x)dx
+Where:
+
+𝑀
+𝑖
+𝑗
+M 
+ij
+​
+  represents the entry in the mass matrix corresponding to basis functions 
+𝑁
+𝑖
+(
+𝑥
+)
+N 
+i
+​
+ (x) and 
+𝑁
+𝑗
+(
+𝑥
+)
+N 
+j
+​
+ (x).
+𝑁
+𝑖
+(
+𝑥
+)
+N 
+i
+​
+ (x) and 
+𝑁
+𝑗
+(
+𝑥
+)
+N 
+j
+​
+ (x) are the linear basis functions (hat functions) defined over the elements.
+Formula for 1D Linear Basis Functions:
+For linear basis functions in 1D, the mass matrix entries are calculated using Gaussian quadrature (or analytically) over each element. For an element with length 
+ℎ
+h (which in 1D corresponds to 
+ℎ
+=
+Δ
+𝑥
+h=Δx), the mass matrix contributions are:
+
+𝑀
+𝑖
+𝑖
+=
+2
+ℎ
+6
+,
+𝑀
+𝑖
+𝑗
+=
+ℎ
+6
+for 
+𝑖
+≠
+𝑗
+M 
+ii
+​
+ = 
+6
+2h
+​
+ ,M 
+ij
+​
+ = 
+6
+h
+​
+ for i
+
+=j
+Where 
+ℎ
+h is the element length (or 
+Δ
+𝑥
+Δx).
+
+Mass Matrix Implementation:
+In the code, the mass matrix is assembled using these contributions. Here's the formula used:
+
+Diagonal terms 
+𝑀
+𝑖
+𝑖
+=
+2
+3
+⋅
+ℎ
+M 
+ii
+​
+ = 
+3
+2
+​
+ ⋅h.
+Off-diagonal terms 
+𝑀
+𝑖
+,
+𝑖
+−
+1
+=
+𝑀
+𝑖
+−
+1
+,
+𝑖
+=
+1
+6
+⋅
+ℎ
+M 
+i,i−1
+​
+ =M 
+i−1,i
+​
+ = 
+6
+1
+​
+ ⋅h.
 *3.3. Properties of the Linear Basis Functions*
 <br/> 3.3.1. Partition of Unity: The sum of all basis functions at any point $x$ is equal to 1, i.e., $\sum_{i}N_i(x)=1$.
 <br/> 3.3.2. Locality: Each basis function is non-zero only in the elements adjacent to the node $i$. This results in a sparse system of equations, which is computationally efficient.
