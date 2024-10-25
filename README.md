@@ -58,191 +58,52 @@ Where:
 * $N_i(x)$ takes the value of 1 at node $i$ (at $x=x_i$).
 * $N_i(x)$ is 0 at nodes $i−1$ and $i+1$.
 * $N_i(x)$ is linear between the nodes, i.e., it rises from 0 to 1 between $x_{i-1}$ and $x_i$, and then falls from 1 to 0 between $x_i$ and $x_{i+1}$.
-To form the mass matrix, we integrate over the domain using the basis functions:
 
-𝑀
-𝑖
-𝑗
-=
-∫
-Ω
-𝑁
-𝑖
-(
-𝑥
-)
-𝑁
-𝑗
-(
-𝑥
-)
- 
-𝑑
-𝑥
-M 
-ij
-​
- =∫ 
-Ω
-​
- N 
-i
-​
- (x)N 
-j
-​
- (x)dx
+*Properties of the Linear Basis Functions*
+<br/> Partition of Unity: The sum of all basis functions at any point $x$ is equal to 1, i.e., $\sum_{i}N_i(x)=1$.
+<br/> Locality: Each basis function is non-zero only in the elements adjacent to the node $i$. This results in a sparse system of equations, which is computationally efficient.
+<br/> Continuity: The piecewise linear basis functions are continuous, meaning they ensure that the solution $u(x)$ is continuous across the elements, but the derivative may not be.
+
+*3.3. Spatial Discretization*
+<br/> The domain is discretized into $N$ elements of equal size $Δx$, and linear basis functions are used to approximate the solution over each element. The mass matrix $M$ and stiffness matrix $K$ are assembled based on the basis functions and the nonlinear diffusion coefficient.
+* Mass Matrix: The mass matrix is constant and set initially. It represents how quantities are distributed over the elements.
+* Stiffness Matrix: The stiffness matrix is variable and assembles at each time step based on the current value of the solution $u$, making it dependent on the nonlinear diffusion coefficient $D(u)$.
+* 
+*3.3.1. Mass Matrix Implementation:*
+<br/> To form the mass matrix, we integrate over the domain using the basis functions:
+
+$$M_{ij}=\int_{\Omega}{N_i(x)N_j(x)dx}$$
+
 Where:
+* $M_ij$ represents the entry in the mass matrix corresponding to basis functions $N_i(x)$ and $N_j(x)$.
+* $N_i(x)$ and $N_j(x)$ are linear basis functions (hat functions) defined over the elements.
 
-𝑀
-𝑖
-𝑗
-M 
-ij
-​
-  represents the entry in the mass matrix corresponding to basis functions 
-𝑁
-𝑖
-(
-𝑥
-)
-N 
-i
-​
- (x) and 
-𝑁
-𝑗
-(
-𝑥
-)
-N 
-j
-​
- (x).
-𝑁
-𝑖
-(
-𝑥
-)
-N 
-i
-​
- (x) and 
-𝑁
-𝑗
-(
-𝑥
-)
-N 
-j
-​
- (x) are the linear basis functions (hat functions) defined over the elements.
-Formula for 1D Linear Basis Functions:
-For linear basis functions in 1D, the mass matrix entries are calculated using Gaussian quadrature (or analytically) over each element. For an element with length 
-ℎ
-h (which in 1D corresponds to 
-ℎ
-=
-Δ
-𝑥
-h=Δx), the mass matrix contributions are:
+<br/> For linear basis functions in 1D, the mass matrix entries are calculated using Gaussian quadrature (or analytically) over each element. For an element with length $h$ (which in 1D corresponds to $(h=Δx)$, the mass matrix contributions are:
 
-𝑀
-𝑖
-𝑖
-=
-2
-ℎ
-6
-,
-𝑀
-𝑖
-𝑗
-=
-ℎ
-6
-for 
-𝑖
-≠
-𝑗
-M 
-ii
-​
- = 
-6
-2h
-​
- ,M 
-ij
-​
- = 
-6
-h
-​
- for i
-
-=j
-Where 
-ℎ
-h is the element length (or 
-Δ
-𝑥
-Δx).
+$$M_{ii}=\frac{2h}{3}, \quad M_{ij}=\frac{h}{6} \quad {for}~ i\neq j$$
 
-Mass Matrix Implementation:
-In the code, the mass matrix is assembled using these contributions. Here's the formula used:
+Where $h$ is the element length (or $\Delta x$). So, in the code, the mass matrix is assembled using these contributions. Here's the formula used:
 
-Diagonal terms 
-𝑀
-𝑖
-𝑖
-=
-2
-3
-⋅
-ℎ
-M 
-ii
-​
- = 
-3
-2
-​
- ⋅h.
-Off-diagonal terms 
-𝑀
-𝑖
-,
-𝑖
-−
-1
-=
-𝑀
-𝑖
-−
-1
-,
-𝑖
-=
-1
-6
-⋅
-ℎ
-M 
-i,i−1
-​
- =M 
-i−1,i
-​
- = 
-6
-1
-​
- ⋅h.
-*3.3. Properties of the Linear Basis Functions*
-<br/> 3.3.1. Partition of Unity: The sum of all basis functions at any point $x$ is equal to 1, i.e., $\sum_{i}N_i(x)=1$.
-<br/> 3.3.2. Locality: Each basis function is non-zero only in the elements adjacent to the node $i$. This results in a sparse system of equations, which is computationally efficient.
-<br/> 3.3.2. Continuity: The piecewise linear basis functions are continuous, meaning they ensure that the solution $u(x)$ is continuous across the elements, but the derivative may not be.
+* Diagonal terms $M_{ii}=\frac{2}{3}h$
+* Off-diagonal terms $M_{i,i-1}=M_{i-1,i}=\frac{1}{6}h$
+
+*3.3.2. Stiffness Matrix Implementation:*
+<br/> The stiffness matrix $K$ arises from the spatial derivative term in the weak form, which represents diffusion. It comes from the integration of the product of the gradients of the basis functions:
+
+$$K_{ij}=\int_{\Omega}{D(u) \frac{\partial N_i(x)}{\partial x} \frac{\partial N_j(x)}{\partial x} dx}$$
+
+Where:
+* $D(u)$ is the nonlinear diffusion coefficient (a function of $u$).
+* $\frac{\partial N_i(x)}{\partial x}$ and $\frac{\partial N_j(x)}{\partial x}$ are the derivatives of the basis functions, which are constant for linear basis functions.
+
+<br/> For linear basis functions, the derivatives are constant within each element, so the stiffness matrix entries are:
+
+$$K_{ii}=\frac{2D(u)}{h}, \quad K_{ij}=-\frac{D(u)}{h} \quad {for}~ i\neq j$$
+
+<br/> Where $h$ is the element length $(h=Δx)$ and $D(u)$ is the diffusion coefficient, which can vary with $u$ in nonlinear diffusion problems. So, the stiffness matrix is assembled similarly to the mass matrix, but now with the contributions of the gradients:
+
+* Diagonal terms $K_{ii}=\frac{2D(u)}{h}$.
+* Off-diagonal terms $K_{ij}=-\frac{D(u)}{h}$.
 
 *3.4. Time Discretization*
 <br/> For time integration, we use the forward Euler method:
@@ -254,9 +115,3 @@ This results in the update formula:
 $$u^{n+1}=u^n-\Delta t(M^T)^{-1}K^Tu^n$$
  
 The solution is iteratively updated over the specified time steps.
-
-*3.5. Spatial Discretization*
-<br/> The domain is discretized into $N$ elements of equal size $Δx$, and linear basis functions are used to approximate the solution over each element. The mass matrix $M$ and stiffness matrix $K$ are assembled based on the basis functions and the nonlinear diffusion coefficient.
-* Mass Matrix: The mass matrix is constant and set initially. It represents how quantities are distributed over the elements.
-* Stiffness Matrix: The stiffness matrix is assembled at each time step based on the current value of the solution $u$, making it dependent on the nonlinear diffusion coefficient $D(u)$.
-
