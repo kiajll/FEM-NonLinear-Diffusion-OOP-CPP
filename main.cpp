@@ -18,7 +18,8 @@ protected:
     MatrixXd M;    // Mass matrix
 
 public:
-    FEMSolver(int nx_, double L_, double dt_, int nt_)
+    // Constructor
+    FEMSolver(int nx_, double L_, double dt_, int nt_)   
         : nx(nx_), L(L_), dt(dt_), nt(nt_) {
         dx = L / (nx - 1);
         u = VectorXd::Ones(nx);  // Initialize solution vector to ones
