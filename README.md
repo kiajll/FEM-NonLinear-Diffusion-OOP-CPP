@@ -8,7 +8,7 @@ In this particular implementation, we model diffusion in the presence of a nonli
 
 $$\frac{\partial u}{\partial t}= \frac {\partial}{\partial x}( D(u) \frac{\partial u}{\partial x} )$$
 
-Where:
+##Where:
 * $u(x,t)$ is the scalar field representing the physical quantity being diffused (e.g., temperature or concentration).
 * $D(u)$ is the nonlinear diffusion coefficient that depends on the solution $u$.
 * The term $\frac{\partial u}{\partial t}$ represents the rate of change of the field over time.
