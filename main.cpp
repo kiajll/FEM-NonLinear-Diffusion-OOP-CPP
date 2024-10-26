@@ -26,7 +26,7 @@ public:
         M = assemble_mass_matrix();  // Assemble mass matrix
     }
 
-    // Virtual functions for derived classes to implement specific behavior
+    // Abstract methods, Virtual functions for derived classes to implement specific behavior
     virtual MatrixXd assemble_stiffness_matrix() = 0;
     virtual void apply_boundary_conditions(VectorXd& u_new) = 0;
 
