@@ -116,5 +116,9 @@ $$u^{n+1}=u^n-\Delta t(M^T)^{-1}K^Tu^n$$
  
 The solution is iteratively updated over the specified time steps.
 
-### License
-This project is licensed under the GPL License.
+
+## License
+```bash
+Licensed under the Creative Commons Attribution-NoDerivatives 4.0 International License.
+To view a copy of this license, visit https://creativecommons.org/licenses/by-nd/4.0/.
+```
