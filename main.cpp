@@ -1,3 +1,11 @@
+/************************************************************************
+* Governing equation: 1D Nonlinear Diffusion 
+* Spatial Numerical Discretization: Finite Element Method
+* Temporal integrating Technique: Finite Difference Forward Euler Method
+* Author: Kiarash Jalali
+* Licensed under the Creative Commons Attribution-NoDerivatives 4.0, 
+* International License.
+************************************************************************/
 #include <iostream>
 #include <vector>
 #include <cmath>
