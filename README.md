@@ -35,17 +35,7 @@ $$ u\left(x\right) \approx \sum_{i=1}^{n}{u_i N_i(x)} $$
 * Local support: Each basis function is associated with a specific node, and its value is non-zero only on the two elements that share this node.
 * Piecewise linear: The function is linear between the nodes, meaning it varies linearly within the interval between two adjacent nodes.
 
-<br/> For node $i$, the basis function $N_i(x)$ is defined as:
-
-This leads to a system of equations of the form:
-
-$$M^{T} \frac{du}{dt}=-K^{T}u$$
-
-Where:
-* $M$ is the mass matrix.
-* $𝐾$ is the stiffness matrix that depends on $u$ and the nonlinear diffusion coefficient $D(u)$.
-
-<br/> The linear basis function is as follows
+<br/> For node $i$, the linear basis function $N_i(x)$ is defined as:
 
 $$ N_i(x)=\begin{cases}
     \frac{x-x_{i-1}}{x_i-x_{i-1}} & \text{$x_{i-1}~ \leq  x \leq x_{i}$}\\
@@ -66,9 +56,16 @@ Where:
 
 ## 3.3. Spatial Discretization
 <br/> The domain is discretized into $N$ elements of equal size $Δx$, and linear basis functions are used to approximate the solution over each element. The mass matrix $M$ and stiffness matrix $K$ are assembled based on the basis functions and the nonlinear diffusion coefficient.
+This leads to a system of equations of the form:
+
+$$M^{T} \frac{du}{dt}=-K^{T}u$$
+
+Where:
+* $M$ is the mass matrix.
+* $𝐾$ is the stiffness matrix that depends on $u$ and the nonlinear diffusion coefficient $D(u)$.
 * Mass Matrix: The mass matrix is constant and set initially. It represents how quantities are distributed over the elements.
 * Stiffness Matrix: The stiffness matrix is variable and assembles at each time step based on the current value of the solution $u$, making it dependent on the nonlinear diffusion coefficient $D(u)$.
-* 
+
 ### 3.3.1. Mass Matrix Implementation:
 <br/> To form the mass matrix, we integrate over the domain using the basis functions:
 
